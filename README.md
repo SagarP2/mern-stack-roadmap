@@ -1,5 +1,3 @@
-# mern-stack-roadmap
-
 # MERN Stack Development Roadmap for Juniors
 
 ## ✅ Stage 1: JavaScript Fundamentals

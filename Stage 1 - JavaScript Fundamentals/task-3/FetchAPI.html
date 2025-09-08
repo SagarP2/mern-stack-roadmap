@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Fetch API Example</title>
+    <style>
+      * {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        margin: 0;
+        padding: 0;
+      }
+
+      #data-container {
+        display: grid;
+        grid-template-columns: 1fr 2fr; /* left = user list, right = details */
+        gap: 1rem;
+        padding: 1rem;
+      }
+
+      /* the left side list */
+      .subcontainer {
+        background: #f8f8f8;
+        border-radius: 8px;
+        padding: 1rem;
+        overflow-y: auto;
+      }
+
+      .subcontainer h3 {
+        margin-top: 0;
+      }
+
+      .subcontainer li {
+        list-style: none;
+        margin: 0.5rem 0;
+        padding: 0.5rem;
+        background: #ffffff;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+      }
+
+      .subcontainer li:hover {
+        background: #eaeaea;
+      }
+
+      .data-container {
+        background: #f8f8f8;
+        border-radius: 8px;
+        padding: 1rem;
+        overflow-y: auto;
+      }
+
+      /* responsive breakpoints */
+      @media (max-width: 768px) {
+        #data-container {
+          grid-template-columns: 1fr; /* stack vertically on small screens */
+        }
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="todo-container">
+      <h2>Fetch Placeholder API</h2>
+      <button id="fetch-btn" onclick="fetchData()">Fetch Data</button>
+    </div>
+    <div id="data-container" class="data-container"></div>
+    <script>
+      // simple fetch api example
+      //   function fetchData() {
+      //     const datacontainer = document.getElementById("data-container");
+      //     datacontainer.textContent = "";
+      //     let datatitle = [
+      //       "posts",
+      //       "comments",
+      //       "albums",
+      //       "photos",
+      //       "todos",
+      //       "users",
+      //     ];
+      //     datatitle.forEach((title) => {
+      //       const subcontainer = document.createElement("div");
+      //       subcontainer.className = "subcontainer";
+      //       datacontainer.appendChild(subcontainer);
+      //       fetch("https://jsonplaceholder.typicode.com/" + title)
+      //         .then((response) => response.json())
+      //         .then((data) => {
+      //           const titleElement = document.createElement("h3");
+      //           titleElement.textContent = title;
+      //           subcontainer.appendChild(titleElement);
+
+      //           data.forEach((item) => {
+      //             const li = document.createElement("li");
+      //             li.textContent = item.id + " : " + (item.title || item.body || item.name);
+      //             subcontainer.appendChild(li);
+      //           });
+      //         });
+      //     });
+      //   }
+
+      // fetch from user
+      function fetchData() {
+        const datacontainer = document.getElementById("data-container");
+        datacontainer.textContent = "";
+
+        const datatitle = ["posts", "albums", "todos"];
+
+        fetch("https://jsonplaceholder.typicode.com/users")
+          .then((response) => response.json())
+          .then((users) => {
+            // top-level container for user list
+            const subcontainer = document.createElement("div");
+            subcontainer.className = "subcontainer";
+            const titleElement = document.createElement("h3");
+            titleElement.textContent = "Users";
+            subcontainer.appendChild(titleElement);
+            datacontainer.appendChild(subcontainer);
+
+            // one container to reuse for showing details
+            const data_sub_container = document.createElement("div");
+            data_sub_container.className = "data-container";
+            datacontainer.appendChild(data_sub_container);
+
+            const childcontainer = document.createElement("div");
+            childcontainer.className = "subcontainer";
+            data_sub_container.appendChild(childcontainer);
+
+            // build user list
+            users.forEach((user) => {
+              const li = document.createElement("li");
+              li.textContent = user.id + " : " + user.name;
+              li.style.cursor = "pointer";
+
+              // on click show details for that user
+              li.onclick = function () {
+                childcontainer.innerHTML = ""; // clear old content
+                datatitle.forEach((title) => {
+                  fetch("https://jsonplaceholder.typicode.com/" + title)
+                    .then((response) => response.json())
+                    .then((items) => {
+                      const titleElement = document.createElement("h3");
+                      titleElement.textContent = title;
+                      childcontainer.appendChild(titleElement);
+
+                      items
+                        .filter((item) => item.userId === user.id)
+                        .forEach((item) => {
+                          const li = document.createElement("li");
+                          li.textContent = item.id + " : " + item.title;
+                          childcontainer.appendChild(li);
+                        });
+                    });
+                });
+              };
+
+              subcontainer.appendChild(li);
+            });
+          });
+      }
+    </script>
+  </body>
+</html>

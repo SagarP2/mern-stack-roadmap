@@ -1,0 +1,52 @@
+* {
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: Arial, sans-serif;
+        background: #f4f4f9;
+        display: flex;
+        justify-content: center;
+        margin: 0;
+      }
+
+      .todo-container {
+        background: #fff;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        width: 320px;
+      }
+
+      h2 {
+        margin-top: 0;
+        text-align: center;
+      }
+
+      .city-input {
+        width: 80%;
+        padding: 8px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        margin: 10px 0;
+      }
+
+      button {
+        padding: 8px 12px;
+        border: none;
+        border-radius: 5px;
+        background: #007bff;
+        color: white;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #0056b3;
+      }
+
+      /* responsive breakpoints */
+      @media (max-width: 768px) {
+        #data-container {
+          grid-template-columns: 1fr; /* stack vertically on small screens */
+        }
+      }

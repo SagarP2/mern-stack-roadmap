@@ -1,24 +1,72 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <title>mini Project</title>
-    <link rel="stylesheet" href="WeatherAPI.css" />
-  </head>
-
-  <body>
-    <div class="todo-container">
-      <h2>Fetch Weather API</h2>
-      <input
-        type="text"
-        id="city-input"
-        class="city-input"
-        placeholder="Enter city name"
-      />
-      <button id="fetch-btn" onclick="showdetails()">Fetch Data</button>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <title>WeatherVibe - Modern Weather App</title>
+  <link rel="stylesheet" href="WeatherAPI.css">
+</head>
+<body>
+  <div class="background-animation">
+    <div class="floating-shapes">
+      <div class="shape shape-1"></div>
+      <div class="shape shape-2"></div>
+      <div class="shape shape-3"></div>
+      <div class="shape shape-4"></div>
     </div>
-    <div id="data-container" class="data-container"></div>
+  </div>
 
-    <script href="WeatherAPI.js"></script>
+  <div class="app-container">
+    <header class="app-header">
+      <div class="logo">
+        <i class="fas fa-cloud-sun"></i>
+        <span>WeatherVibe</span>
+      </div>
+      <div class="theme-toggle" id="theme-toggle">
+        <i class="fas fa-moon"></i>
+      </div>
+    </header>
 
-  </body>
+    <main class="main-content">
+      <div class="search-section">
+        <h1 class="app-title">Discover Weather</h1>
+        <p class="app-subtitle">Real-time weather insights for any location worldwide</p>
+        
+        <div class="search-container">
+          <div class="input-wrapper">
+            <i class="fas fa-map-marker-alt location-icon"></i>
+            <input
+              type="text"
+              id="city-input"
+              class="search-input"
+              placeholder="Search for a city..."
+              autocomplete="off"
+            />
+            <button class="search-btn" onclick="showdetails()" aria-label="Search weather">
+              <i class="fas fa-search"></i>
+            </button>
+          </div>
+          <div class="quick-cities">
+            <span class="quick-city" onclick="quickSearch('London')">London</span>
+            <span class="quick-city" onclick="quickSearch('New York')">New York</span>
+            <span class="quick-city" onclick="quickSearch('Tokyo')">Tokyo</span>
+            <span class="quick-city" onclick="quickSearch('Paris')">Paris</span>
+          </div>
+        </div>
+      </div>
+
+      <div id="data-container" class="weather-card">
+        <!-- Weather info appears here -->
+      </div>
+    </main>
+
+    <footer class="app-footer">
+      <p>&copy; 2024 WeatherVibe. Powered by OpenWeatherMap API</p>
+    </footer>
+  </div>
+
+  <script src="WeatherAPI.js"></script>
+</body>
 </html>

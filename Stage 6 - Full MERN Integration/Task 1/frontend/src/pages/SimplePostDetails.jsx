@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuth } from '../contexts/AuthContext';
 import api from '../api/axios';
 import SiteLayout from '../components/SiteLayout';
+import Button from '../components/ui/Button';
 
 const SimplePostDetails = () => {
   const { id } = useParams();
@@ -57,13 +58,27 @@ const SimplePostDetails = () => {
     });
   };
 
+  const renderLoading = (
+    <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4">
+      <span className="h-10 w-10 animate-spin rounded-full border-2 border-blue-300 border-t-transparent" />
+      <p className="text-slate-400">Loading post…</p>
+    </div>
+  );
+
+  const renderError = (
+    <div className="rounded-3xl border border-red-500/40 bg-red-500/10 p-10 text-center text-red-100">
+      <h3 className="text-2xl font-semibold">Post not found</h3>
+      <p className="mt-2 text-sm">{error}</p>
+      <Button as={Link} to="/" className="mt-6 justify-center">
+        ← Back to posts
+      </Button>
+    </div>
+  );
+
   if (loading) {
     return (
       <SiteLayout>
-        <div className="container-custom py-12 text-center">
-          <div className="loading mx-auto"></div>
-          <p className="mt-2">Loading post...</p>
-        </div>
+        {renderLoading}
       </SiteLayout>
     );
   }
@@ -71,13 +86,7 @@ const SimplePostDetails = () => {
   if (error || !post) {
     return (
       <SiteLayout>
-        <div className="container-custom py-12 text-center">
-          <div className="card">
-            <h3 className="text-lg font-semibold">Post not found</h3>
-            <p className="text-gray-600">{error}</p>
-            <Link to="/" className="btn mt-3">← Back to posts</Link>
-          </div>
-        </div>
+        {renderError}
       </SiteLayout>
     );
   }
@@ -86,69 +95,60 @@ const SimplePostDetails = () => {
 
   return (
     <SiteLayout>
-      <div className="container-custom py-10">
-        <article style={{ maxWidth: '800px', margin: '0 auto' }}>
-          {/* Post Header */}
-          <div className="card mb-4">
-            <div className="flex justify-between items-center mb-3">
-              <div>
-                <div style={{ fontSize: '14px', color: '#666', marginBottom: '8px' }}>
-                  By {post.author?.name || 'Anonymous'} • {formatDate(post.createdAt)}
-                </div>
-              </div>
-            </div>
-            
-            <h1 style={{ fontSize: '2.5rem', marginBottom: '1rem', lineHeight: '1.2' }}>
-              {post.title || post.heading}
-            </h1>
-          </div>
+      <article className="mx-auto max-w-4xl space-y-8">
+        <header className="rounded-3xl border border-ink-800 bg-ink-900/70 p-8 shadow-card">
+          <p className="text-xs uppercase tracking-[0.3em] text-slate-500">
+            By {post.author?.name || 'Anonymous'} • {formatDate(post.createdAt)}
+          </p>
+          <h1 className="mt-4 text-4xl font-semibold text-white">{post.title || post.heading}</h1>
+        </header>
 
-          {/* Post Body */}
-          <div className="card">
-            {post.introduction && (
-              <div style={{ backgroundColor: '#f8f9fa', padding: '20px', borderRadius: '6px', marginBottom: '24px', borderLeft: '4px solid #007bff' }}>
-                <p style={{ fontSize: '1.1rem', fontWeight: '500', margin: '0' }}>
-                  {post.introduction}
-                </p>
-              </div>
-            )}
-            
-            <div style={{ fontSize: '1.1rem', lineHeight: '1.7', whiteSpace: 'pre-wrap' }}>
-              {post.mainBody || post.content}
+        <section className="rounded-3xl border border-ink-800 bg-ink-900/70 p-8 shadow-card space-y-8">
+          {post.introduction && (
+            <div className="rounded-2xl border border-blue-400/30 bg-blue-400/10 p-5 text-base text-blue-200">
+              {post.introduction}
             </div>
-            
-            {post.conclusion && (
-              <div style={{ marginTop: '32px', paddingTop: '24px', borderTop: '1px solid #e9ecef' }}>
-                <h3 style={{ marginBottom: '16px' }}>Conclusion</h3>
-                <div style={{ whiteSpace: 'pre-wrap' }}>
-                  {post.conclusion}
-                </div>
-              </div>
-            )}
-            
-            {post.callToAction && (
-              <div style={{ marginTop: '32px', padding: '20px', backgroundColor: '#f8f9fa', borderRadius: '6px' }}>
-                <h4 style={{ marginBottom: '12px' }}>What's Next?</h4>
-                <div style={{ whiteSpace: 'pre-wrap' }}>
-                  {post.callToAction}
-                </div>
-              </div>
-            )}
+          )}
+          <div className="prose prose-invert max-w-none text-slate-200">
+            {(post.mainBody || post.content || '').split('\n').map((paragraph, idx) => (
+              <p key={`${paragraph}-${idx}`}>{paragraph}</p>
+            ))}
           </div>
+          {post.conclusion && (
+            <div className="border-t border-ink-800 pt-6">
+              <h3 className="text-xl font-semibold text-white">Conclusion</h3>
+              <p className="mt-3 text-slate-300 whitespace-pre-wrap">{post.conclusion}</p>
+            </div>
+          )}
+          {post.callToAction && (
+            <div className="rounded-2xl border border-ink-700 bg-ink-800/70 p-5">
+              <h4 className="text-sm uppercase tracking-[0.3em] text-slate-400">What&apos;s next?</h4>
+              <p className="mt-3 text-slate-200 whitespace-pre-wrap">{post.callToAction}</p>
+            </div>
+          )}
+        </section>
 
-          <div className="flex items-center justify-between mt-4">
-            <Link to="/" className="btn btn-secondary">← Back</Link>
-            {isAuthor && (
-              <div className="flex gap-2">
-                <Link to={`/edit-post/${post._id}`} className="btn">Edit</Link>
-                <button onClick={handleDelete} disabled={deleting} className="btn btn-danger">
-                  {deleting ? 'Deleting...' : 'Delete'}
-                </button>
-              </div>
-            )}
-          </div>
-        </article>
-      </div>
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <Button as={Link} to="/" variant="ghost" className="justify-center" onClick={() => navigate(-1)}>
+            ← Back
+          </Button>
+          {isAuthor && (
+            <div className="flex gap-3">
+              <Button as={Link} to={`/edit-post/${post._id}`} variant="secondary">
+                Edit
+              </Button>
+              <Button
+                variant="ghost"
+                className="border border-danger/60 text-danger hover:bg-danger/10"
+                onClick={handleDelete}
+                disabled={deleting}
+              >
+                {deleting ? 'Deleting…' : 'Delete'}
+              </Button>
+            </div>
+          )}
+        </div>
+      </article>
     </SiteLayout>
   );
 };

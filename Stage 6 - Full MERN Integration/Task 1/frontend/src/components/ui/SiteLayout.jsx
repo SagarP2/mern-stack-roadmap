@@ -1,12 +1,11 @@
 import SiteHeader from './SiteHeader';
-import SiteFooter from './SiteFooter';
 
 export default function SiteLayout({ children }) {
   return (
     <div className="min-h-screen bg-ink-950 text-slate-100">
       <SiteHeader />
-      <main className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 lg:px-8">{children}</main>
-      <SiteFooter />
+      <main className="mx-auto max-w-6xl px-6 py-10">{children}</main>
     </div>
   );
 }
+

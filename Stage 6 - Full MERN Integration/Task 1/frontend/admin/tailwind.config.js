@@ -8,29 +8,31 @@ export default {
   theme: {
     extend: {
       colors: {
+        // Professional Black Theme - Soft blacks with subtle contrast
         primary: {
           50: '#eff6ff',
           100: '#dbeafe',
           200: '#bfdbfe',
           300: '#93c5fd',
           400: '#60a5fa',
-          500: '#3b82f6',
-          600: '#2563eb',
-          700: '#1d4ed8',
-          800: '#1e40af',
+          500: '#4D7CFE', // Accent blue
+          600: '#4D7CFE',
+          700: '#3b5fd1',
+          800: '#2e4ba8',
           900: '#1e3a8a',
         },
         gray: {
-          50: '#f9fafb',
-          100: '#f3f4f6',
-          200: '#e5e7eb',
-          300: '#d1d5db',
-          400: '#9ca3af',
-          500: '#6b7280',
-          600: '#4b5563',
-          700: '#374151',
-          800: '#1f2937',
-          900: '#111827',
+          50: '#EDEDED',   // Text primary (soft white)
+          100: '#d4d4d4',
+          200: '#A1A1A1',  // Text secondary
+          300: '#8a8a8a',
+          400: '#6b6b6b',
+          500: '#525252',
+          600: '#3a3a3a',
+          700: '#222222',  // Highlight stroke
+          800: '#1A1A1A',  // Card surface
+          850: '#161616',  // Card surface variant
+          900: '#111111',  // Base black surface
         },
         accent: {
           50: '#f5f3ff',

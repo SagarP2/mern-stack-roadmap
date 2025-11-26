@@ -23,7 +23,9 @@ app.use('/api/auth', authRoutes);
 app.use('/api/posts', postRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/admin', adminRoutes);
-app.use('/api/test', testRoutes);
+if (process.env.NODE_ENV !== 'production') {
+  app.use('/api/test', testRoutes);
+}
 
 // Health check
 app.get('/api/health', (req, res) => {

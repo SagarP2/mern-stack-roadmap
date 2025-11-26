@@ -19,12 +19,12 @@ const Login = () => {
   
   const from = location.state?.from?.pathname || '/admin/dashboard';
 
-  // Redirect if already authenticated
+  // Redirect if already authenticated - go to main landing page
   useEffect(() => {
     if (isAuthenticated) {
-      navigate(from, { replace: true });
+      window.location.href = 'http://localhost:5173/';
     }
-  }, [isAuthenticated, navigate, from]);
+  }, [isAuthenticated]);
 
   const handleChange = (e) => {
     setFormData({

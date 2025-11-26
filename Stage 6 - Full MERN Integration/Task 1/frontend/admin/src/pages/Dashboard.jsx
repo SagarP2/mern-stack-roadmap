@@ -78,20 +78,32 @@ const Dashboard = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4 xs:space-y-5 sm:space-y-6">
+      {/* Mobile Search Bar - Only visible on mobile/tablet */}
+      <div className="md:hidden">
+        <div className="relative">
+          <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 w-4 h-4 text-gray-400" />
+          <input
+            type="text"
+            placeholder="Search blogs, users..."
+            className="pl-10 pr-4 py-2.5 w-full bg-gray-50 dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent text-sm transition-all duration-200"
+          />
+        </div>
+      </div>
+
       {/* Page Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 sm:gap-4">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
+          <h1 className="text-2xl xs:text-3xl font-bold text-gray-900 dark:text-white">
             Dashboard
           </h1>
-          <p className="text-gray-600 dark:text-gray-400 mt-1">
+          <p className="text-gray-600 dark:text-gray-400 mt-1 text-xs xs:text-sm">
             Welcome back! Here&apos;s what&apos;s happening with your blog.
           </p>
         </div>
-        <div className="flex items-center space-x-2 text-sm text-gray-500 dark:text-gray-400">
-          <Calendar className="w-4 h-4" />
-          <span>{new Date().toLocaleDateString('en-US', { 
+        <div className="flex items-center space-x-2 text-xs xs:text-sm text-gray-500 dark:text-gray-400 w-full sm:w-auto">
+          <Calendar className="w-3.5 h-3.5 xs:w-4 xs:h-4 flex-shrink-0" />
+          <span className="truncate">{new Date().toLocaleDateString('en-US', { 
             weekday: 'long', 
             year: 'numeric', 
             month: 'long', 
@@ -100,8 +112,51 @@ const Dashboard = () => {
         </div>
       </div>
 
+      {/* Top Blogs - Uploaded Posts Section (Shown First) */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="card"
+      >
+        <h3 className="text-base xs:text-lg font-semibold text-gray-900 dark:text-white mb-3 xs:mb-4">
+          Top Performing Blogs
+        </h3>
+        <div className="space-y-3 xs:space-y-4">
+          {topBlogsData.map((blog, index) => (
+            <motion.div
+              key={index}
+              initial={{ opacity: 0, x: 20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 * index }}
+              className="flex items-center justify-between p-2 xs:p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors gap-2 xs:gap-3"
+            >
+              <div className="flex-1 min-w-0">
+                <p className="text-xs xs:text-sm font-medium text-gray-900 dark:text-white truncate">
+                  {blog.title}
+                </p>
+                <div className="flex items-center space-x-1 mt-1">
+                  <Eye className="w-3 h-3 text-gray-400 flex-shrink-0" />
+                  <span className="text-xs text-gray-500 dark:text-gray-400">
+                    {blog.views.toLocaleString()} views
+                  </span>
+                </div>
+              </div>
+              <div className="flex items-center space-x-2 flex-shrink-0">
+                <div className="w-12 xs:w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
+                  <div 
+                    className="bg-primary-600 h-2 rounded-full transition-all duration-500"
+                    style={{ width: `${(blog.views / 1250) * 100}%` }}
+                  />
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
+
       {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 xs:grid-cols-2 lg:grid-cols-4 gap-3 xs:gap-4 sm:gap-6">
         <StatsCard
           title="Total Blogs"
           value={dashboardStats.totalPosts || 0}
@@ -141,7 +196,7 @@ const Dashboard = () => {
       </div>
 
       {/* Charts Section */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 xs:gap-5 sm:gap-6">
         {/* Blog Stats Chart */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -176,89 +231,43 @@ const Dashboard = () => {
         </motion.div>
       </div>
 
-      {/* Recent Activity and Top Blogs */}
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* Recent Activity */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.4 }}
-          className="card"
-        >
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            Recent Activity
-          </h3>
-          <div className="space-y-4">
-            {recentActivity.map((activity, index) => (
-              <motion.div
-                key={activity.id}
-                initial={{ opacity: 0, x: -20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 * index }}
-                className="flex items-center space-x-3 p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-              >
-                <div className={`p-2 rounded-full ${getActivityColor(activity.type)}`}>
-                  {getActivityIcon(activity.type)}
-                </div>
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                    {activity.action}
-                  </p>
-                  <p className="text-xs text-gray-500 dark:text-gray-400">
-                    by {activity.user}
-                  </p>
-                </div>
-                <span className="text-xs text-gray-400 dark:text-gray-500">
-                  {activity.time}
-                </span>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* Top Blogs */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.5 }}
-          className="card"
-        >
-          <h3 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-            Top Performing Blogs
-          </h3>
-          <div className="space-y-4">
-            {topBlogsData.map((blog, index) => (
-              <motion.div
-                key={index}
-                initial={{ opacity: 0, x: 20 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ delay: 0.1 * index }}
-                className="flex items-center justify-between p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
-              >
-                <div className="flex-1 min-w-0">
-                  <p className="text-sm font-medium text-gray-900 dark:text-white truncate">
-                    {blog.title}
-                  </p>
-                  <div className="flex items-center space-x-1 mt-1">
-                    <Eye className="w-3 h-3 text-gray-400" />
-                    <span className="text-xs text-gray-500 dark:text-gray-400">
-                      {blog.views.toLocaleString()} views
-                    </span>
-                  </div>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <div className="w-16 bg-gray-200 dark:bg-gray-700 rounded-full h-2">
-                    <div 
-                      className="bg-primary-600 h-2 rounded-full transition-all duration-500"
-                      style={{ width: `${(blog.views / 1250) * 100}%` }}
-                    />
-                  </div>
-                </div>
-              </motion.div>
-            ))}
-          </div>
-        </motion.div>
-      </div>
+      {/* Recent Activity */}
+      <motion.div
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.4 }}
+        className="card"
+      >
+        <h3 className="text-base xs:text-lg font-semibold text-gray-900 dark:text-white mb-3 xs:mb-4">
+          Recent Activity
+        </h3>
+        <div className="space-y-3 xs:space-y-4">
+          {recentActivity.map((activity, index) => (
+            <motion.div
+              key={activity.id}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: 0.1 * index }}
+              className="flex items-center space-x-2 xs:space-x-3 p-2 xs:p-3 rounded-lg hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors"
+            >
+              <div className={`p-1.5 xs:p-2 rounded-full ${getActivityColor(activity.type)} flex-shrink-0`}>
+                {getActivityIcon(activity.type)}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-xs xs:text-sm font-medium text-gray-900 dark:text-white truncate">
+                  {activity.action}
+                </p>
+                <p className="text-xs text-gray-500 dark:text-gray-400 truncate">
+                  by {activity.user}
+                </p>
+              </div>
+              <span className="text-xs text-gray-400 dark:text-gray-500 flex-shrink-0">
+                {activity.time}
+              </span>
+            </motion.div>
+          ))}
+        </div>
+      </motion.div>
 
       {/* Monthly Overview Chart */}
       <motion.div

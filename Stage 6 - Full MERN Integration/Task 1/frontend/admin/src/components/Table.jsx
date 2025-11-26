@@ -65,22 +65,22 @@ const Table = ({
   }
 
   return (
-    <div className={`space-y-4 ${className}`}>
-      <div className="table-container">
-        <table className="table">
+    <div className={`space-y-3 xs:space-y-4 ${className}`}>
+      <div className="table-container overflow-x-auto -mx-3 xs:-mx-4 sm:mx-0 px-3 xs:px-4 sm:px-0">
+        <table className="table min-w-full">
           <thead>
             <tr>
               {columns.map((column) => (
                 <th 
                   key={column.key}
-                  className={column.sortable ? 'cursor-pointer select-none' : ''}
+                  className={`${column.sortable ? 'cursor-pointer select-none' : ''} whitespace-nowrap`}
                   onClick={() => column.sortable && handleSort(column.key)}
                 >
                   <div className="flex items-center space-x-1">
-                    <span>{column.title}</span>
+                    <span className="text-xs xs:text-sm">{column.title}</span>
                     {column.sortable && (
                       <span className="text-gray-400">
-                        {getSortIcon(column.key) || <ChevronUp className="w-4 h-4 opacity-30" />}
+                        {getSortIcon(column.key) || <ChevronUp className="w-3 h-3 xs:w-4 xs:h-4 opacity-30" />}
                       </span>
                     )}
                   </div>
@@ -91,10 +91,10 @@ const Table = ({
           <tbody>
             {data.length === 0 ? (
               <tr>
-                <td colSpan={columns.length} className="text-center py-8">
+                <td colSpan={columns.length} className="text-center py-6 xs:py-8">
                   <div className="text-gray-500 dark:text-gray-400">
-                    <p className="text-lg font-medium mb-2">No data found</p>
-                    <p className="text-sm">There are no items to display at the moment.</p>
+                    <p className="text-base xs:text-lg font-medium mb-2">No data found</p>
+                    <p className="text-xs xs:text-sm">There are no items to display at the moment.</p>
                   </div>
                 </td>
               </tr>
@@ -113,7 +113,7 @@ const Table = ({
                   `}
                 >
                   {columns.map((column) => (
-                    <td key={column.key}>
+                    <td key={column.key} className="whitespace-nowrap text-xs xs:text-sm">
                       {column.render ? column.render(row[column.key], row, index) : row[column.key]}
                     </td>
                   ))}
@@ -126,30 +126,35 @@ const Table = ({
 
       {/* Pagination */}
       {pagination && (
-        <div className="flex items-center justify-between px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
-          <div className="flex items-center space-x-2 text-sm text-gray-700 dark:text-gray-300">
-            <span>
+        <div className="flex flex-col xs:flex-row items-center justify-between gap-3 xs:gap-4 px-3 xs:px-4 py-3 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg">
+          <div className="flex items-center space-x-2 text-xs xs:text-sm text-gray-700 dark:text-gray-300 order-2 xs:order-1">
+            <span className="hidden sm:inline">
               Showing {((pagination.currentPage - 1) * pagination.limit) + 1} to{' '}
               {Math.min(pagination.currentPage * pagination.limit, pagination.total)} of{' '}
               {pagination.total} results
             </span>
+            <span className="sm:hidden">
+              Page {pagination.currentPage} of {pagination.totalPages}
+            </span>
           </div>
           
-          <div className="flex items-center space-x-1">
+          <div className="flex items-center space-x-1 order-1 xs:order-2">
             <button
               onClick={() => onPageChange(1)}
               disabled={pagination.currentPage === 1}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="p-1.5 xs:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors hidden sm:block"
+              aria-label="First page"
             >
-              <ChevronsLeft className="w-4 h-4" />
+              <ChevronsLeft className="w-3.5 h-3.5 xs:w-4 xs:h-4" />
             </button>
             
             <button
               onClick={() => onPageChange(pagination.currentPage - 1)}
               disabled={pagination.currentPage === 1}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="p-1.5 xs:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              aria-label="Previous page"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-3.5 h-3.5 xs:w-4 xs:h-4" />
             </button>
             
             <div className="flex items-center space-x-1">
@@ -162,7 +167,7 @@ const Table = ({
                     key={page}
                     onClick={() => onPageChange(page)}
                     className={`
-                      px-3 py-2 rounded-lg text-sm font-medium transition-colors
+                      px-2 xs:px-3 py-1.5 xs:py-2 rounded-lg text-xs xs:text-sm font-medium transition-colors
                       ${page === pagination.currentPage
                         ? 'bg-primary-600 text-white'
                         : 'hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-700 dark:text-gray-300'
@@ -178,17 +183,19 @@ const Table = ({
             <button
               onClick={() => onPageChange(pagination.currentPage + 1)}
               disabled={pagination.currentPage === pagination.totalPages}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="p-1.5 xs:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              aria-label="Next page"
             >
-              <ChevronRight className="w-4 h-4" />
+              <ChevronRight className="w-3.5 h-3.5 xs:w-4 xs:h-4" />
             </button>
             
             <button
               onClick={() => onPageChange(pagination.totalPages)}
               disabled={pagination.currentPage === pagination.totalPages}
-              className="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="p-1.5 xs:p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors hidden sm:block"
+              aria-label="Last page"
             >
-              <ChevronsRight className="w-4 h-4" />
+              <ChevronsRight className="w-3.5 h-3.5 xs:w-4 xs:h-4" />
             </button>
           </div>
         </div>

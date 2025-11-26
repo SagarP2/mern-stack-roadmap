@@ -1,6 +1,24 @@
 import axios from 'axios';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const COOKIE_TOKEN = 'blogspace_token';
+
+const getCookie = (name) => {
+  if (typeof document === 'undefined') return null;
+  return document.cookie
+    .split('; ')
+    .find((row) => row.startsWith(`${name}=`))
+    ?.split('=')[1];
+};
+
+const getStoredToken = () => {
+  if (typeof window === 'undefined') return null;
+  return (
+    window.localStorage.getItem('token') ||
+    window.sessionStorage.getItem('token') ||
+    getCookie(COOKIE_TOKEN)
+  );
+};
 
 const api = axios.create({
   baseURL: API_BASE_URL,
@@ -10,7 +28,7 @@ const api = axios.create({
 // Add auth token to requests
 api.interceptors.request.use(
   (config) => {
-    const token = localStorage.getItem('token');
+    const token = getStoredToken();
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }

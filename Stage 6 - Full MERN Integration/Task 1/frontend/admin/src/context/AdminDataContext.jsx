@@ -19,10 +19,10 @@ export const AdminDataProvider = ({ children }) => {
   const [activityLogs, setActivityLogs] = useState([]);
   const [loading, setLoading] = useState(false);
 
-  // Theme management
+  // Theme management - Default to dark mode for professional black theme
   const [theme, setTheme] = useState(() => {
     const savedTheme = localStorage.getItem('adminTheme');
-    return savedTheme || 'light';
+    return savedTheme || 'dark'; // Changed default to 'dark'
   });
 
   useEffect(() => {

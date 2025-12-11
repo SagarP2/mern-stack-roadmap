@@ -5,5 +5,12 @@ export default defineConfig({
   plugins: [react()],
   css: {
     devSourcemap: true
+  },
+  server: {
+    allowedHosts: [
+      "unspeedy-jennefer-nonorchestrally.ngrok-free.dev"
+    ],
+    host: true,
+    port: 5173
   }
 })
